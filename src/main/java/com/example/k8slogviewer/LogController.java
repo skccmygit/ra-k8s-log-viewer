@@ -29,7 +29,7 @@ public class LogController {
     }
 
     @PostMapping("/logs")
-    public String getLogs(@RequestParam String namespace, @RequestParam String pod, @RequestParam(required = false, defaultValue = "100") int lineCount, Model model) {
+    public String getLogs(@RequestParam String namespace, @RequestParam String pod, @RequestParam(required = false, defaultValue = "300") int lineCount, Model model) {
         String logs = getPodLogs(namespace, pod, lineCount);
         model.addAttribute("logs", logs);
         model.addAttribute("namespace", namespace);

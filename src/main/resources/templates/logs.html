@@ -16,9 +16,16 @@
 <body>
     <h1>네임스페이스: <span th:text="${namespace}"></span></h1>
     <h2>Pod: <span th:text="${pod}"></span></h2>
+    <form action="/logs" method="post" style="margin-bottom:1em;">
+        <input type="hidden" name="namespace" th:value="${namespace}" />
+        <input type="hidden" name="pod" th:value="${pod}" />
+        <label for="lineCount">로그 라인 수:</label>
+        <input type="number" name="lineCount" id="lineCount" th:value="${lineCount}" min="1" max="10000" style="width:80px;">
+        <button type="submit">🔄 로그 조회/리프레시</button>
+    </form>
     <h3>최신 로그</h3>
     <pre th:text="${logs}"></pre>
-    <a th:href="@{''/pods'(namespace=${namespace})}">다른 Pod 선택</a> |
+    <a th:href="@{'/pods'(namespace=${namespace})}">다른 Pod 선택</a> |
     <a href="/">네임스페이스 다시 선택</a>
 
     <script>
