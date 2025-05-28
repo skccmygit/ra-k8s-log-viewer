@@ -28,13 +28,16 @@ jobs:
       id: get_jar_name
       run: echo "::set-output name=jar_name::$(basename $(find target -name '*.jar' ! -name '*tests.jar'))"
 
+    - name: Copy JAR to project root
+      run: cp target/$(basename $(find target -name '*.jar' ! -name '*tests.jar')) .
+
     - name: Deploy JAR to server
       uses: appleboy/scp-action@v0.1.6
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        source: "target/${{ steps.get_jar_name.outputs.jar_name }}"
+        source: "${{ steps.get_jar_name.outputs.jar_name }}"
         target: "/home/azureuser/mgmt/log-viewer" # <-- 서버에 JAR 파일을 업로드할 경로로 변경하세요.
 
     - name: Execute on server
