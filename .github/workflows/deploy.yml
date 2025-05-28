@@ -34,7 +34,7 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         source: "target/${{ steps.get_jar_name.outputs.jar_name }}"
-        target: "/path/to/deploy/directory" # <-- 서버에 JAR 파일을 업로드할 경로로 변경하세요.
+        target: "/home/azureuser/mgmt/log-viewer" # <-- 서버에 JAR 파일을 업로드할 경로로 변경하세요.
 
     - name: Execute on server
       uses: appleboy/ssh-action@v0.1.9
@@ -43,18 +43,14 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          # 이전 애플리케이션 중지 (예시: PID를 찾아 kill)
-          # 실제 애플리케이션 중지 명령어로 변경하세요.
-          # 예: pgrep -f "your-app-name" | xargs kill -9 || true
-          # 예: systemctl stop your-service-name || true
-          echo "Stopping previous application (replace with actual stop command)"
-
-          # 배포 디렉토리로 이동
-          cd /path/to/deploy/directory # <-- 서버에 JAR 파일을 업로드한 경로와 동일해야 합니다.
-
-          # 새 JAR 파일 실행 (예시)
-          # 실제 애플리케이션 실행 명령어로 변경하세요.
-          # 백그라운드 실행을 위해 nohup 또는 systemd 사용을 권장합니다.
-          # 예: nohup java -jar ${{ steps.get_jar_name.outputs.jar_name }} > app.log 2>&1 &
-          # 예: systemctl start your-service-name
-          echo "Starting new application (replace with actual start command)" 
+          JAR_NAME="${{ steps.get_jar_name.outputs.jar_name }}"
+          cd /home/azureuser/mgmt/log-viewer
+          PID=$(ps -ef | grep "$JAR_NAME" | grep -v grep | awk '{print $2}')
+          if [ -n "$PID" ]; then
+            echo "기존 프로세스($PID)를 종료합니다."
+            kill -9 $PID
+            sleep 1
+          fi
+          echo "$JAR_NAME 실행을 시작합니다..."
+          nohup java -jar "$JAR_NAME" > app.log 2>&1 &
+          echo "실행 완료. 로그는 app.log 에 저장됩니다." 
