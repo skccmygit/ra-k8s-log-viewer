@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>로그 보기 - Kubernetes Log Viewer</title>
+    <style>
+        pre {
+            background: #222;
+            color: #eee;
+            padding: 1em;
+            border-radius: 8px;
+            overflow-x: auto;
+            max-height: 600px;
+        }
+    </style>
+</head>
+<body>
+    <h1>네임스페이스: <span th:text="${namespace}"></span></h1>
+    <h2>Pod: <span th:text="${pod}"></span></h2>
+    <h3>최신 로그</h3>
+    <pre th:text="${logs}"></pre>
+    <a th:href="@{''/pods'(namespace=${namespace})}">다른 Pod 선택</a> |
+    <a href="/">네임스페이스 다시 선택</a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const preElement = document.querySelector('pre');
+            if (preElement) {
+                preElement.scrollTop = preElement.scrollHeight;
+            }
+        });
+    </script>
+</body>
+</html> 

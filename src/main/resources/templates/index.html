@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Kubernetes Log Viewer</title>
+    <script>
+        function fetchPods() {
+            var ns = document.getElementById('namespace').value;
+            var podSelect = document.getElementById('pod');
+            podSelect.innerHTML = '<option>Loading...</option>';
+            fetch('/api/pods?namespace=' + encodeURIComponent(ns))
+                .then(response => response.json())
+                .then(data => {
+                    podSelect.innerHTML = '';
+                    data.forEach(function(pod) {
+                        var opt = document.createElement('option');
+                        opt.value = pod;
+                        opt.text = pod;
+                        podSelect.appendChild(opt);
+                    });
+                });
+        }
+        window.onload = function() {
+            fetchPods(); // 최초 로딩 시 기본 네임스페이스의 Pod 목록 로드
+        };
+    </script>
+</head>
+<body>
+    <h1>Kubernetes Log Viewer</h1>
+    <form action="/logs" method="post">
+        <label for="namespace">네임스페이스 선택:</label>
+        <select name="namespace" id="namespace" onchange="fetchPods()">
+            <option th:each="ns : ${namespaces}" th:value="${ns}" th:text="${ns}"></option>
+        </select>
+        <br><br>
+        <label for="pod">Pod 선택:</label>
+        <select name="pod" id="pod">
+            <option>Pod를 선택하세요</option>
+        </select>
+        <br><br>
+        <label for="lineCount">로그 라인 수:</label>
+        <input type="number" name="lineCount" id="lineCount" value="100" min="1" max="10000" style="width:80px;">
+        <br><br>
+        <button type="submit">🔄 로그 조회/리프레시</button>
+    </form>
+</body>
+</html> 

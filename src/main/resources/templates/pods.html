@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Pod 선택 - Kubernetes Log Viewer</title>
+</head>
+<body>
+    <h1>네임스페이스: <span th:text="${namespace}"></span></h1>
+    <form action="/logs" method="post">
+        <label for="pod">Pod 선택:</label>
+        <select name="pod" id="pod">
+            <option th:each="pod : ${pods}" th:value="${pod}" th:text="${pod}"></option>
+        </select>
+        <input type="hidden" name="namespace" th:value="${namespace}" />
+        <button type="submit">로그 조회</button>
+    </form>
+    <a href="/">네임스페이스 다시 선택</a>
+</body>
+</html> 
