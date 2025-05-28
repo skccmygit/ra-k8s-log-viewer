@@ -7,7 +7,8 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    #runs-on: ubuntu-latest
+    runs-on: [general-skccmygit-action-runner,general-skccmygit-action-runner2,general-skccmygit-action-runner3,general-skccmygit-action-runner4,general-skccmygit-action-runner5,general-skccmygit-action-runner6,general-skccmygit-action-runner7,general-skccmygit-action-runner8,general-skccmygit-action-runner9,general-skccmygit-action-runner10]
 
     steps:
     - name: Checkout code
