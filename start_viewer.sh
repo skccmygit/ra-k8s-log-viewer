@@ -1,6 +1,6 @@
 #!/bin/bash
 
-JAR_NAME="demo-0.0.1-SNAPSHOT.jar"
+JAR_NAME="logviewer-0.0.1-SNAPSHOT.jar"
 
 # 1. 실행 중인 프로세스 확인
 PID=$(ps -ef | grep "$JAR_NAME" | grep -v grep | awk '{print $2}')
